@@ -2,9 +2,9 @@ defmodule MixDepsAdd.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :mix_deps_add,
-     version: "0.1.3",
-     elixir: "~> 1.4",
+    [app: :elixir_static_code_rules,
+     version: "0.1.4",
+     elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod]
   end
@@ -14,7 +14,7 @@ defmodule MixDepsAdd.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger, :inets, :ssl]]
   end
 
   # Note that we don't have a deps/0 function here; as a Mix task, we can't

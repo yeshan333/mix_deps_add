@@ -17,7 +17,7 @@ For names without a slash, it looks up the latest released version on
 Install its archive, so that it's available in all of your projects:
 
 ```
-$ mix archive.install https://github.com/bryanstearns/mix_deps_add/releases/download/0.1.3/mix_deps_add-0.1.3.ez
+$ mix archive.install
 ```
 
 ## Why?

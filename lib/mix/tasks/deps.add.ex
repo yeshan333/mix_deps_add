@@ -6,18 +6,24 @@ defmodule Mix.Tasks.Deps.Add do
   @shortdoc "Adds new dependencies to mix.exs"
 
   @mix_exs_parsing_errors %{
-    no_deps: "deps/0 function not found.",
-    ambiguous_deps: "looks like there's more than one deps/0 function?",
-    no_deps_end: "end of deps/0 function not found.",
-    unparsable_deps: "found the deps/0 function, but couldn't figure out its content."
+    no_deps: "deps/0(deps/1) function not found.",
+    ambiguous_deps: "looks like there's more than one deps/0(deps/1) function?",
+    no_deps_end: "end of deps/0(deps/1) function not found.",
+    unparsable_deps: "found the deps/0(deps/1) function, but couldn't figure out its content."
   }
 
-  def run(package_names, opts \\ [])
-  def run([], _opts) do
-    IO.puts("Usage: mix deps.add PACKAGE_NAME…")
-    System.halt(2)
-  end
-  def run(package_names, opts) do
+  @doc """
+      iex(12)> OptionParser.parse(["package1", "package2", "--versioner", "2.0.0"], switches: [versioner: :string, editor: :string])
+        {[versioner: "2.0.0"], ["package1", "package2"], []}
+  """
+  def run(opts) do
+    {opts, package_names, _} = OptionParser.parse(opts, switches: [versioner: :string, editor: :string])
+
+    if Enum.empty?(package_names) do
+      IO.puts("Usage: mix deps.add PACKAGE_NAME…")
+      System.halt(2)
+    end
+
     editor = Keyword.get(opts, :editor, MixExsEditor)
     versioner = Keyword.get(opts, :versioner, PackageVersion)
 
@@ -27,6 +33,10 @@ defmodule Mix.Tasks.Deps.Add do
     end)
     |> announce_results()
     |> editor.write()
+  end
+
+  def add_package(state, package_name, editor, versioner) when is_binary(versioner) do
+    editor.add(state, package_name, version: versioner)
   end
 
   def add_package(state, package_name, editor, versioner) do
